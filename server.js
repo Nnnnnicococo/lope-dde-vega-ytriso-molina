@@ -284,10 +284,15 @@ function send(res, obj) {
 
 function downloadAudio(url, tmpDir) {
   const outputTemplate = path.join(tmpDir, 'audio.%(ext)s');
-  execSync(
-    `yt-dlp --extract-audio --audio-format mp3 --audio-quality 0 -o "${outputTemplate}" "${url}"`,
-    { stdio: 'pipe' }
-  );
+  // Download best audio in native format — no ffmpeg conversion needed.
+  // Try with browser impersonation first (requires: pip install curl_cffi).
+  const baseCmd = `yt-dlp -f "bestaudio/best" --no-playlist -o "${outputTemplate}" "${url}"`;
+  const impersonateCmd = baseCmd + ' --impersonate chrome';
+  try {
+    execSync(impersonateCmd, { stdio: 'pipe' });
+  } catch {
+    execSync(baseCmd, { stdio: 'pipe' });
+  }
   const files = fs.readdirSync(tmpDir).filter(f => f.startsWith('audio'));
   if (!files.length) throw new Error('yt-dlp no generó archivo de audio');
   return path.join(tmpDir, files[0]);

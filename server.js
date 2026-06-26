@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3333;
 const WHISPER_SCRIPT = path.join(__dirname, 'whisper_transcribe.py');
 const OUTPUT_DIR = path.join(__dirname, 'Cerebro_Central', 'sistema');
 
@@ -391,5 +391,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`\n  TikTok → Claude Code`);
-  console.log(`  Abrí el browser en: http://localhost:${PORT}\n`);
+  console.log(`  Abrí el browser en: http://localhost:${PORT}`);
+  console.log(`  (para cambiar el puerto: PORT=4000 node server.js)\n`);
 });
